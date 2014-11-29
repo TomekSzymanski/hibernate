@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="model">
+
+    <class name="model.Order" table="Orders">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+
+        <map name="orderedGoods" table="OrderedProducts" cascade="all">
+            <key column="orderId" not-null="true"/>
+            <map-key-many-to-many column="productId" class="Product"/>
+            <element column="quantity" type="int"/>
+        </map>
+
+        <property name="dateOrderCreated" type="date"/>
+
+        <property name="state" column="state">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">model.OrderState</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+
+        <many-to-one name="customer" class="Customer" column="customerId" not-null="true" cascade="all"/>
+    </class>
+</hibernate-mapping>

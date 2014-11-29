@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="model">
+    <class name="model.Product" table="Product">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string"/>
+        <property name="price" type="big_decimal"/>
+        <property name="isPromoted" type="boolean"/>
+        <many-to-one name="category" column="productCategoryId" class="model.ProductCategory" not-null="true" lazy="false"/>
+    </class>
+</hibernate-mapping>
