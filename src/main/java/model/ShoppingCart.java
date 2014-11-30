@@ -1,25 +1,24 @@
 package model;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created on 2014-11-26.
  */
 public class ShoppingCart {
     private int id;
-    private Map<Product, Integer> products = new HashMap<>();
+    private Set<OrderItem> products = new LinkedHashSet<>();
 
-    public void add(Product product, int quantity) {
-        products.put(product, quantity);
+    public void add(Product product, int quantity, BigDecimal unitPrice) {
+        products.add(new OrderItem(product, quantity, unitPrice, null));
     }
 
     public void remove(Product product) {
         products.remove(product);
     }
 
-    public Map<Product, Integer> getProducts() {
-        return Collections.unmodifiableMap(products);
+    public Set<OrderItem> getProducts() {
+        return products;
     }
 }

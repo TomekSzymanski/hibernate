@@ -6,9 +6,18 @@ import javax.persistence.*;
 @Table(name = "Customers")
 public class Customer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id", nullable = false)
     private int id;
+
+    @Column (nullable = false)
     private String name;
+
+    @Column
     private String surname;
+
+    @Column
     private String address;
 
     public Customer(String name) {
@@ -18,9 +27,6 @@ public class Customer {
     public Customer() {
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id", nullable = false)
     public int getId() {
         return id;
     }
@@ -29,7 +35,6 @@ public class Customer {
         this.id = id;
     }
 
-    @Column (nullable = false)
     public String getName() {
         return name;
     }
@@ -38,7 +43,6 @@ public class Customer {
         this.name = name;
     }
 
-    @Column
     public String getSurname() {
         return surname;
     }
@@ -47,7 +51,6 @@ public class Customer {
         this.surname = surname;
     }
 
-    @Column
     public String getAddress() {
         return address;
     }

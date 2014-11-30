@@ -23,7 +23,7 @@ public class CustomerShoppingSession {
 
     /* returns Shopping cart after adding new product */
     public ShoppingCart addToCart(Product product, int quantity)  {
-        cart.add(product, quantity);
+        cart.add(product, quantity, product.getPrice());
         return cart;
     }
 

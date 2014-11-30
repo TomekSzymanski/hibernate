@@ -41,7 +41,7 @@ public class Shop implements OfferManagementService, OrderExecution {
             }
             session.save(productCategory);
             trx.commit();
-        } catch (HibernateException e) {
+        } catch (HibernateException e) { // TODO check if there is concreate child of Hibernate exception
             trx.rollback();
             throw new ApplicationException("unable to add new product", e);
         } finally {
@@ -104,11 +104,13 @@ public class Shop implements OfferManagementService, OrderExecution {
         Transaction trx = null;
         try {
             trx = session.beginTransaction();
-            List<Order> allOrdersToDelete = session.createQuery("FROM Order").list();
-            for(Order order : allOrdersToDelete) {
-                order.getOrderedGoods().clear(); // TODO: why cascading delete from Order does not work?
-                session.delete(order);
-            }
+//            List<Order> allOrdersToDelete = session.createQuery("FROM Order").list();
+//            for(Order order : allOrdersToDelete) {
+//                order.getOrderedGoods().forEach(i -> session.delete(i)); // TODO: why cascading delete from Order does not work? nie dziala wlasnie bo mam te cudaczne kolekcje a nie encje
+//                session.delete(order);
+//            }
+            session.createQuery("DELETE FROM OrderItem").executeUpdate(); // TODO: why we manually delete both??
+            session.createQuery("DELETE FROM Order").executeUpdate();
             trx.commit();
         } catch (HibernateException e) {
             trx.rollback();
@@ -146,6 +148,23 @@ public class Shop implements OfferManagementService, OrderExecution {
 
             try {
                 trx = session.beginTransaction();
+
+                // 1. decrease offered inventory amounts for all ordered products
+                for (OrderItem orderItem : order.getOrderedGoods()) {
+                    int requestedQuantity = orderItem.getQuantity();
+                    Product productInInventory = (Product)session.createQuery("FROM Product WHERE id = :id") // TODO replace query for every element with one query for all
+                            .setParameter("id", orderItem.getProduct().getId())
+                            .uniqueResult();
+                    int quantityOffered = productInInventory.getAmountOffered();
+                    if (requestedQuantity > quantityOffered) {
+                        throw new InventoryTooLowException(productInInventory, requestedQuantity, quantityOffered,
+                                "cannot order " + requestedQuantity + " of product " + productInInventory + " . Only " + quantityOffered + " available");
+                    }
+                    productInInventory.setAmountOffered(productInInventory.getAmountOffered() - requestedQuantity);
+                }
+                // productInInventory will auto save at end of transaction
+
+                // 2. and save the order
                 session.save(order);
                 trx.commit();
             } catch (HibernateException e) {

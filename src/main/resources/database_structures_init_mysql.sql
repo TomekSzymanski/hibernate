@@ -1,3 +1,9 @@
+drop table if exists OrderItem;
+
+drop table if exists Orders;
+
+drop table if exists Customers;
+
 drop table if exists Product;
 
 drop table if exists ProductCategoryAliases;
@@ -23,12 +29,12 @@ create table Product (
     name varchar(100) not null,
     price numeric(10,2),
     productCategoryId int not null,
+    amountOffered int,
     isPromoted boolean,
     primary key(id),
     foreign key(productCategoryId) references ProductCategory(id)
 );
 
-drop table if exists Customers;
 
 create table Customers (
     id int not null auto_increment,
@@ -38,24 +44,22 @@ create table Customers (
     primary key(id)
 );
 
-drop table if exists Orders;
-
 create table Orders (
     id int not null auto_increment,
     dateOrderCreated date not null,
     customerId int not null,
-    state varchar(10) not null,
+    state varchar(10) not null, -- add check constraint
     primary key(id),
     foreign key(customerId) references Customers(id)
 );
 
-drop table if exists OrderedProducts;
-
-create table OrderedProducts (
+create table OrderItem (
+    id int not null auto_increment,
     orderId int not null,
     productId int not null,
     quantity int not null,
-    primary key(orderId, productId),
+    unitPrice numeric(6,2) not null,
+    primary key(id),-- WAS primary key(orderId, productId),
     foreign key(orderId) references Orders(id),
     foreign key(productId) references Product(id)
 );

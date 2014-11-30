@@ -1,25 +1,47 @@
 package model;
 
+import javax.persistence.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  Represents one customer oder
  */
+@Entity
+@Table(name = "Orders")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
     private int id;
 
     /** customer owning this order */
+    @ManyToOne(targetEntity = Customer.class, cascade = CascadeType.ALL )
+    @JoinColumn(name = "customerId", nullable = false)
     private Customer customer;
+
+    @Enumerated(EnumType.STRING)
+    private OrderState state = OrderState.NEW;
+
+    @Column
+    private Date dateOrderCreated; // TODO replace with LocalDate, integrate class implementig Enhanced user type
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name="orderId")
+    private Set<OrderItem> orderedGoods = new LinkedHashSet<>();
 
     Order() {
         dateOrderCreated = new Date();
     }
 
     Order(ShoppingCart cart, Customer customer) {
-        orderedGoods.putAll(cart.getProducts());
+        // TODO rework this associacian to unilateral
+        Set<OrderItem> orderItems = cart.getProducts();
+        orderItems.forEach(item->item.setOwningOrder(this));
+
+        orderedGoods.addAll(orderItems);
         dateOrderCreated = new Date();
         this.customer = customer;
     }
@@ -31,12 +53,6 @@ public class Order {
     void setCustomer(Customer customer) {
         this.customer = customer;
     }
-
-    private OrderState state = OrderState.NEW;
-
-    private Date dateOrderCreated; // TODO replace with LocalDate, integrate class implementig Enhanced user type
-
-    private Map<Product, Integer> orderedGoods = new HashMap<>(); // products and their quantity. Price is within Product.
 
     public Date getDateOrderCreated() {
         return dateOrderCreated;
@@ -62,11 +78,24 @@ public class Order {
         this.state = state;
     }
 
-    public Map<Product, Integer> getOrderedGoods() {
+    public Set<OrderItem> getOrderedGoods() {
         return orderedGoods;
     }
 
-    void setOrderedGoods(Map<Product, Integer> orderedGoods) {
+    void setOrderedGoods(Set<OrderItem> orderedGoods) {
         this.orderedGoods = orderedGoods;
     }
+
+    public boolean containsProduct(Product product) {
+        return orderedGoods.stream().anyMatch(item -> item.getProduct().equals(product));
+    }
+
+    public int getProductQuantity(Product product) {
+        return orderedGoods.stream()
+                .filter(item -> item.getProduct().equals(product))
+                .mapToInt(OrderItem::getQuantity)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(("Cannot get quantity for product " + product + ", order does not contain it")));
+    }
+
 }

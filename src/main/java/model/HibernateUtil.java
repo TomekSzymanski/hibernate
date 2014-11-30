@@ -18,7 +18,11 @@ class HibernateUtil {
     static {
         try {
             Configuration configuration = new Configuration().configure()
-                    .addAnnotatedClass(Customer.class).addAnnotatedClass(ProductCategory.class);
+                    .addAnnotatedClass(Customer.class) // TODO: how not to specify all
+                    .addAnnotatedClass(ProductCategory.class)
+                    .addAnnotatedClass(Product.class)
+                    .addAnnotatedClass(Order.class)
+                    .addAnnotatedClass(OrderItem.class);
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

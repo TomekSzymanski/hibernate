@@ -1,29 +1,33 @@
 package model;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
-//@Entity
-//@Table(name="product")
+@Entity
+@Table(name="Product")
 public class Product {
 
-//    @Id @GeneratedValue
-//    @Column(name = "id")
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
     private int id;
 
-//    @Column(name="name")
+    @Column
     private String name;
 
-//    @Column(name="price")
+    @Column
     private BigDecimal price;
 
-//    @Column()
+    @ManyToOne(targetEntity = ProductCategory.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "productCategoryId", nullable = false)
     private ProductCategory category;
 
+    @Transient
     private ProductFeatures features;
 
+    @Column
     private int amountOffered;
 
-//    @Column(name = "isPromoted")
+    @Column
     private boolean isPromoted;
 
     Product(){}
@@ -61,9 +65,10 @@ public class Product {
         return result;
     }
 
-    public Product(String name, ProductCategory category) {
+    public Product(String name, ProductCategory category, BigDecimal price) {
         this.name = name;
         this.category = category;
+        this.price = price;
     }
 
     public boolean getIsPromoted() { //TODO: singature isPromoted does not work: org.hibernate.PropertyNotFoundException: Could not find a getter for isPromoted in class model.Product
