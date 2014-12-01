@@ -95,4 +95,13 @@ public class OrderItem {
         result = 31 * result + unitPrice.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "product=" + product.getName() +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                '}';
+    }
 }

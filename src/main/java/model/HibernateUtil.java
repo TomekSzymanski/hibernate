@@ -8,6 +8,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.util.List;
+
 /**
  * Created on 2014-11-27.
  */
@@ -37,8 +39,15 @@ class HibernateUtil {
         return sessionFactory;
     }
 
-    static Query prepareQuery(String hql) {
-        return getSessionFactory().openSession().createQuery(hql);
+    static List prepareQuery(String hql) {
+        List queryResults;
+        Session session = getSessionFactory().openSession();
+        // TODO http://stackoverflow.com/questions/1957588/why-i-have-to-declare-each-and-every-class-in-my-hibernate-cfg-xml-when-using-an
+        // TODO http://stackoverflow.com/questions/13499450/spring-hibernate-auto-discover-annotated-classes
+        Query query = session.createQuery(hql);
+        queryResults = query.list();
+        session.close();
+        return queryResults;
     }
 
     static void deleteAll(String entityName) {
@@ -50,7 +59,7 @@ class HibernateUtil {
             deleteQuery.executeUpdate();
             trx.commit();
         } catch (HibernateException e) {
-            trx.rollback();
+            if(trx!=null) trx.rollback();
             throw new ApplicationException("unable to delete objects of " + entityName + " class", e); // TODO too low level message
         } finally {
             session.close();

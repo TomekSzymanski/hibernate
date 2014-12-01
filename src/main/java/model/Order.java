@@ -28,7 +28,7 @@ public class Order {
     @Column
     private Date dateOrderCreated; // TODO replace with LocalDate, integrate class implementig Enhanced user type
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="orderId")
     private Set<OrderItem> orderedGoods = new LinkedHashSet<>();
 
@@ -98,4 +98,13 @@ public class Order {
                 .orElseThrow(() -> new IllegalArgumentException(("Cannot get quantity for product " + product + ", order does not contain it")));
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "customer=" + customer +
+                ", state=" + state +
+                ", dateOrderCreated=" + dateOrderCreated +
+                ", orderedGoods=" + orderedGoods +
+                '}';
+    }
 }

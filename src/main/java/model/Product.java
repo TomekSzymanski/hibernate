@@ -17,7 +17,7 @@ public class Product {
     @Column
     private BigDecimal price;
 
-    @ManyToOne(targetEntity = ProductCategory.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = ProductCategory.class)
     @JoinColumn(name = "productCategoryId", nullable = false)
     private ProductCategory category;
 
@@ -49,7 +49,7 @@ public class Product {
         Product product = (Product) o;
 
         if (id != product.id) return false;
-        if (!category.equals(product.category)) return false;
+        if (!category.getName().equals(product.category.getName())) return false;
         if (features != null ? !features.equals(product.features) : product.features != null) return false;
         if (!name.equals(product.name)) return false;
 
@@ -60,7 +60,7 @@ public class Product {
     public int hashCode() {
         int result = id;
         result = 31 * result + name.hashCode();
-        result = 31 * result + category.hashCode();
+        result = 31 * result + category.getName().hashCode();
         result = 31 * result + (features != null ? features.hashCode() : 0);
         return result;
     }

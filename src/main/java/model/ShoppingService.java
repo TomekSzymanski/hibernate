@@ -16,4 +16,7 @@ public interface ShoppingService {
     Iterator<Product> getProducts(ProductCategory category, ProductFeatures filterFeatures);
 
     void placeOrder(Order order);
+
+    public CustomerShoppingSession createCustomerSession();
+
 }

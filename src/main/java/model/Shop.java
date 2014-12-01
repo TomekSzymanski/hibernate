@@ -16,11 +16,8 @@ public class Shop implements OfferManagementService, OrderExecution {
     }
 
     public static Shop getShopInstance() {
-        return new Shop();
-    }
+        return new Shop(); // TODO make singleton
 
-    public CustomerShoppingSession createCustomerSession() {
-        return new CustomerShoppingSession(getShoppingService());
     }
 
     @Override
@@ -42,7 +39,7 @@ public class Shop implements OfferManagementService, OrderExecution {
             session.save(productCategory);
             trx.commit();
         } catch (HibernateException e) { // TODO check if there is concreate child of Hibernate exception
-            trx.rollback();
+            if (trx!=null) trx.rollback();
             throw new ApplicationException("unable to add new product", e);
         } finally {
             session.close();
@@ -62,7 +59,7 @@ public class Shop implements OfferManagementService, OrderExecution {
             session.save(product); // TODO: should not we rather keep in this class a collection of products, customers, orders, etc, operate on those collections, and Session.save them on every change? (or dirty checking will save them?)
             trx.commit();
         } catch (HibernateException e) {
-            trx.rollback();
+            if (trx!=null) trx.rollback();
             throw new ApplicationException("unable to add new product", e);
         } finally {
             session.close();
@@ -77,12 +74,11 @@ public class Shop implements OfferManagementService, OrderExecution {
 
     @Override
     public List<Order> getAllOrders() {
-        Query allOrdersQuery = HibernateUtil.prepareQuery("FROM Order");
-        return allOrdersQuery.list();
+        return HibernateUtil.prepareQuery("FROM Order");
     }
 
     public ShoppingService getShoppingService() {
-        return new ShoppingServiceImpl();
+        return new ShoppingServiceImpl(); // TODO make singleton
     }
 
 
@@ -113,66 +109,10 @@ public class Shop implements OfferManagementService, OrderExecution {
             session.createQuery("DELETE FROM Order").executeUpdate();
             trx.commit();
         } catch (HibernateException e) {
-            trx.rollback();
+            if (trx!=null) trx.rollback();
             throw new ApplicationException("unable to clear all orders", e);
         } finally {
             session.close();
-        }
-
-    }
-
-    private class ShoppingServiceImpl implements ShoppingService {
-
-        @Override
-        public List<ProductCategory> getCategories() {
-            Query query = HibernateUtil.prepareQuery("FROM ProductCategories");
-            return query.list();
-        }
-
-        @Override
-        public List<Product> getProducts(final ProductCategory category) {
-            Query query = HibernateUtil.prepareQuery("FROM Product WHERE productCategoryId = :category");
-            query.setParameter("category", category.getId()); // TODO: why we have to provide ID. Why cannot it associate Product in DB by providing just instance of ProductCategory (it is not SQL of course)
-            return query.list();
-        }
-
-        @Override
-        public Iterator<Product> getProducts(ProductCategory category, ProductFeatures filterFeatures) {
-            return null;
-        }
-
-        @Override
-        public void placeOrder(Order order) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            org.hibernate.Transaction trx = null;
-
-            try {
-                trx = session.beginTransaction();
-
-                // 1. decrease offered inventory amounts for all ordered products
-                for (OrderItem orderItem : order.getOrderedGoods()) {
-                    int requestedQuantity = orderItem.getQuantity();
-                    Product productInInventory = (Product)session.createQuery("FROM Product WHERE id = :id") // TODO replace query for every element with one query for all
-                            .setParameter("id", orderItem.getProduct().getId())
-                            .uniqueResult();
-                    int quantityOffered = productInInventory.getAmountOffered();
-                    if (requestedQuantity > quantityOffered) {
-                        throw new InventoryTooLowException(productInInventory, requestedQuantity, quantityOffered,
-                                "cannot order " + requestedQuantity + " of product " + productInInventory + " . Only " + quantityOffered + " available");
-                    }
-                    productInInventory.setAmountOffered(productInInventory.getAmountOffered() - requestedQuantity);
-                }
-                // productInInventory will auto save at end of transaction
-
-                // 2. and save the order
-                session.save(order);
-                trx.commit();
-            } catch (HibernateException e) {
-                trx.rollback();
-                throw new ApplicationException("unable to place order: " + order, e);
-            } finally {
-                session.close();
-            }
         }
 
     }
