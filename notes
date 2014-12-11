@@ -1,0 +1,86 @@
+﻿user stories:
+1. As customer I want to browse products for given product cathegory (aka cathegory)
+
+1b. as a user I want to be presented all product cathegories
+
+1c. I want to provide search criteria before search: price range, max price, property (like screen size, wifi) -> selectable properties to are filled by shop personel when CRUD cathegories
+1d. sorting criteria
+
+1d. I want shopping cart support and shopping session support
+
+2. As customer I want to purchase product (select from list, add to shopping cart, provide adress and payment information, finalize)
+
+Constraint: logging user not suported (contact information has to be provided every time, payments module out of scope)
+
+3. As sales personel I need to be able to register products at the shop (add products to shop offer). All CRUD operations suppported. When registering I need to assign product cathegory, and it is mandatory step. I need to be able to update product price.
+
+4. as shop personel I need to be able to CRUD product cathegories
+
+5. as order handling personel I need to be able to get reports of items purchased since last defined time, but not delivered yet.
+
+6. I want to be able to insert comments on product and also browse comments
+
+To take advantage of Hibernate, try:
+- Automatically load DB with very many items (try different caching)
+- check hibernate batch processing, for example for batch update of inventory
+- different DB configurations in test and in prod
+- rolling back transaction (when customer for exmaple gives up purchase at payment stage)
+- try out different datatypes (blob for images)
+- exchange oracle to HQL, whatever, check portability
+- performance: read metrics from Session, tune, first remove unnecessary selects/updates on DB (cascades, fetch strategy), enable caching.
+- have any inheritance: map it
+- use interceptors for transactions logging (?), and for similar purposes (not core business logic)
+- why we use inverse=true?
+
+- Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE}) CascadeType.ALL
+Cascades apply to references to entities, not value types.
+TODO: watch out:
+If the children in a parent/child relationship would be value typed
+(e.g. a collection of addresses or strings), their life cycle would depend on the parent
+and no further action would be required for convenient "cascading" of state changes.
+When the parent is saved, the value-typed child objects are saved and when the parent is deleted,
+the children will be deleted, etc. This works for operations such as the removal of a child from the collection.
+Since value-typed objects cannot have shared references, Hibernate will detect this and delete the child from the database.
+
+better: If you are not certain that a matching row exists, you should use the get() method which hits the database immediately and returns null if there is no matching row.
+
+You can even load an object using an SQL SELECT ... FOR UPDATE, using a LockMode. See the API documentation for more information.
+Cat cat = (Cat) sess.get(Cat.class, id, LockMode.UPGRADE);
+
+If you do not know the identifiers of the objects you are looking for, you need a query. (HQL)
+
+by default, for all collection and map objects the fetching rule is FetchType.LAZY and for other instances it follows the FetchType.EAGER policy. in brief, @OneToMany and @ManyToMany relations does not fetch the related objects
+(collection and map) implicictly but the retrieval operation is cascaded through the field in @OneToOne and @ManyToOne ones.
+
+The default fetch plan is used when loading an entity by it's identifier (Session.get() or Session.load()).
+
+Whenever you run an HQL, the default fetch plan is bypassed and query has to define it's own fetching policy (using the join fetch directive).
+
+
+- wlaczyc statystyki na hibernate
+
+- wprowadzic: @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+na poszczegolnych encjach i na ich atrybutach. -> na wszystkich?
+
+- (fetch = FetchType.LAZY): ustawiamy np. na elementach które niekoniecznie beda przez usera ogladane, jak np, opinie, notatki, komentzarze, itp.
+
+- czy dla tabeli encji na prawde trzeba definiowac zawsze kolumne id? Przeciez @Id mozna polozyc na czymkolwiek, szczegolnie na id biznesowym
+
+- https://chlebik.wordpress.com/2013/10/16/entity-manager-i-okolice-czesc-1/
+po co jest w TuDu ten EntityManager? czemu ja go nie uzywam?
+
+
+
+
+
+================ WEB ====================
+Cele na nastepne 2 tygodnie:
+- Servlet API: i napisanie prostego workflow weba, graficznie moze byc do niczego, ma byc funkcjonalne
+- Spring Core (autowire, itd.)
+- Spring MVC
+- hibernate: większość tych tematów powyżej
+
+OUT OF SCOPE:
+- grafika na web
+- javascript
+- testowanie automatyczne

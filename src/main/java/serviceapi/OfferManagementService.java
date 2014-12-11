@@ -1,4 +1,7 @@
-package model;
+package serviceapi;
+
+import model.Product;
+import model.ProductCategory;
 
 /**
  * Created on 2014-11-26.
@@ -10,4 +13,6 @@ public interface OfferManagementService {
 
     /** removes all product categories and all products */
     void clearAllInventory();
+
+    void resetToEmpty();
 }

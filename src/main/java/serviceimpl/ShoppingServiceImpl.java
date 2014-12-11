@@ -1,8 +1,12 @@
-package model;
+package serviceimpl;
 
+import model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import serviceapi.ApplicationException;
+import serviceapi.InventoryTooLowException;
+import serviceapi.ShoppingService;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +67,7 @@ class ShoppingServiceImpl implements ShoppingService {
 //            if (lockException.getCause().getClass().equals(com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException.class)) {
 //                // log and try restarting transaction
 //                if (trx!=null) trx.rollback();
-//                Logger.getLogger("model.ShoppingServiceImpl").log(Level.WARNING, "MySQLTransactionRollbackException in thread " + Thread.currentThread().getName()
+//                Logger.getLogger("serviceimpl.ShoppingServiceImpl").log(Level.WARNING, "MySQLTransactionRollbackException in thread " + Thread.currentThread().getName()
 //                        + " when saving order " + order + " , retrying");
 //                session.clear();
 //                placeOrder(order); // retry
@@ -81,8 +85,8 @@ class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public CustomerShoppingSession createCustomerSession() {
-        return new CustomerShoppingSession(this);
+    public SimpleCustomerShoppingSession createCustomerSession() {
+        return new SimpleCustomerShoppingSession(this);
     }
 
 }

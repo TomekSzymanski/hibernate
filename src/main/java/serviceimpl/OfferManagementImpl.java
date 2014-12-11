@@ -1,24 +1,20 @@
-package model;
+package serviceimpl;
 
+import model.Product;
+import model.ProductCategory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
-import java.util.*;
+import org.springframework.stereotype.Service;
+import serviceapi.ApplicationException;
+import serviceapi.OfferManagementService;
 
 /**
- * Created on 2014-11-26.
+ * Created on 2014-12-11.
  */
-public class Shop implements OfferManagementService, OrderExecution {
-
-    private Shop() {
-    }
-
-    public static Shop getShopInstance() {
-        return new Shop(); // TODO make singleton
-
-    }
+@Service
+public class OfferManagementImpl implements OfferManagementService {
 
     @Override
     public void addCategory(ProductCategory productCategory) {
@@ -72,17 +68,6 @@ public class Shop implements OfferManagementService, OrderExecution {
         HibernateUtil.deleteAll("ProductCategory");
     }
 
-    @Override
-    public List<Order> getAllOrders() {
-        return HibernateUtil.prepareQuery("FROM Order");
-    }
-
-    public ShoppingService getShoppingService() {
-        return new ShoppingServiceImpl(); // TODO make singleton
-    }
-
-
-
     /** resets this shop to totally empty: no products, no product categories, no orders, etc. No historical infomarmation */
     // needed for unit tests only
     public void resetToEmpty() { //TODO: how to hide it from client, but still have in unit integration tests that are from different package? Or have in unit tests clear shop accessible somehow?
@@ -116,5 +101,4 @@ public class Shop implements OfferManagementService, OrderExecution {
         }
 
     }
-
 }

@@ -6,8 +6,13 @@
 
     <groupId>tomeksz</groupId>
     <artifactId>hibernatesample</artifactId>
+    <packaging>war</packaging>
+    <name>My Internet Shop</name>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <spring.version>4.0.2.RELEASE</spring.version>
+    </properties>
 
 
     <dependencies>
@@ -44,7 +49,82 @@
             <version>4.3.7.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+        <!-- Spring dependencies-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+
+        <finalName>MyInternetShop</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://localhost:8080/manager/text</url>
+                    <server>localtomcat</server>
+                    <path>/${project.build.finalName}</path>
+                    <username>tomek</username>
+                    <password>asd0987</password>
+                </configuration>
+            </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.1.1</version>
+                    <configuration>
+                        <warName>${project.build.finalName}</warName>
+                        <outputDirectory>c:\priv\future\java\apache-tomcat-8.0.15\webapps</outputDirectory>
+                        <outputDirectory>c:\priv\future\projects_workspace\hibernatesample\target</outputDirectory>
+                    </configuration>
+                </plugin>
+
+        </plugins>
+    </build>
+
+    <!--distributionManagement>
+        <repository>
+            <id>localtomcat</id>
+            <url>file:c:\priv\future\java\apache-tomcat-8.0.15\webapps</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement-->
 
 
 </project>

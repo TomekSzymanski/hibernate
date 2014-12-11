@@ -1,13 +1,13 @@
-package model;
+package serviceapi;
 
 /**
  * Created on 2014-11-27.
  */
 public class ApplicationException extends RuntimeException {
-    ApplicationException(String s, Throwable cause) {
+    public ApplicationException(String s, Throwable cause) {
         super(s, cause);
     }
-    ApplicationException(String s) {
+    public ApplicationException(String s) {
         super(s);
     }
 }

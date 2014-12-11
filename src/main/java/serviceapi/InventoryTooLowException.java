@@ -1,4 +1,6 @@
-package model;
+package serviceapi;
+
+import model.Product;
 
 /**
  * Created on 2014-11-29.
@@ -9,7 +11,7 @@ public class InventoryTooLowException extends ApplicationException {
     private int requestedAmount;
     private int amountAvailable;
 
-    InventoryTooLowException(Product requestedProduct, int requestedAmount, int amountAvailable, String message) {
+    public InventoryTooLowException(Product requestedProduct, int requestedAmount, int amountAvailable, String message) {
         super(message);
         this.requestedProduct = requestedProduct;
         this.requestedAmount = requestedAmount;

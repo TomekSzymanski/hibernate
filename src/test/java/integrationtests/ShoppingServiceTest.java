@@ -1,9 +1,14 @@
 package integrationtests;
 
-import model.*;
+import model.Customer;
+import model.Order;
+import model.Product;
+import model.ProductCategory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import serviceapi.*;
+import serviceimpl.SimpleShop;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -24,15 +29,16 @@ public class ShoppingServiceTest {
     @Test
     public void getAllProductsByCategory() {
         // given
-        Shop shop = Shop.getShopInstance();
-        shop.resetToEmpty(); // TODO: do not export this method, move it to test, make it as a script. use in memory database, initialize it with your scripts (DDLs)
+        Shop shop = SimpleShop.getShopInstance();
+        OfferManagementService offerMgmt = shop.getOfferManagementService();
+        offerMgmt.resetToEmpty(); // TODO: do not export this method, move it to test, make it as a script. use in memory database, initialize it with your scripts (DDLs)
         ProductCategory smartTvCategory = new ProductCategory("Smart TV");
         Product smartTvOne = new Product("Samsung ER345L", smartTvCategory, BigDecimal.valueOf(2000));
         Product smartTvTwo = new Product("Sony 4343", smartTvCategory, BigDecimal.valueOf(2300));
 
-        shop.addCategory(smartTvCategory);
-        shop.addProduct(smartTvOne, 1);
-        shop.addProduct(smartTvTwo, 1);
+        offerMgmt.addCategory(smartTvCategory);
+        offerMgmt.addProduct(smartTvOne, 1);
+        offerMgmt.addProduct(smartTvTwo, 1);
 
         // when
         ShoppingService shoppingService = shop.getShoppingService();
@@ -47,8 +53,9 @@ public class ShoppingServiceTest {
     @Test
     public void purchaseProduct() {
         // given
-        Shop shop = Shop.getShopInstance();
-        shop.resetToEmpty();
+        Shop shop = SimpleShop.getShopInstance();
+        OfferManagementService offerMgmt = shop.getOfferManagementService();
+        offerMgmt.resetToEmpty();
         ProductCategory smartTvCategory = new ProductCategory("Smart TV");
         Product smartTvOne = new Product("Samsung ER345L", smartTvCategory, BigDecimal.valueOf(2000));
         Product smartTvTwo = new Product("Sony 4343", smartTvCategory, BigDecimal.valueOf(2300));
@@ -56,11 +63,11 @@ public class ShoppingServiceTest {
         ProductCategory mobilePhoneCategory = new ProductCategory("Mobile Phones");
         Product nokiaMobile = new Product("Nokia Lumia 1000", mobilePhoneCategory, BigDecimal.valueOf(760));
 
-        shop.addCategory(smartTvCategory);
-        shop.addCategory(mobilePhoneCategory);
-        shop.addProduct(smartTvOne, 10);
-        shop.addProduct(smartTvTwo, 10);
-        shop.addProduct(nokiaMobile, 10);
+        offerMgmt.addCategory(smartTvCategory);
+        offerMgmt.addCategory(mobilePhoneCategory);
+        offerMgmt.addProduct(smartTvOne, 10);
+        offerMgmt.addProduct(smartTvTwo, 10);
+        offerMgmt.addProduct(nokiaMobile, 10);
 
         // when: select one TV and one mobile:
         ShoppingService shoppingService = shop.getShoppingService();
@@ -71,7 +78,7 @@ public class ShoppingServiceTest {
         Product selectedMobile = mobiles.get(0);
 
         // when you add to cart one TV and 2 mobile phones
-        CustomerShoppingSession shoppingSession = shop.createCustomerSession();
+        CustomerShoppingSession shoppingSession = shop.getShoppingService().createCustomerSession();
         shoppingSession.addToCart(selectedTV, 1);
         shoppingSession.addToCart(selectedMobile, 2);
 
@@ -82,7 +89,7 @@ public class ShoppingServiceTest {
                 , shoppingSession.placeOrder());
 
         // then, shopping personel is able to see your order
-        List<Order> orders = shop.getAllOrders();
+        List<Order> orders = shop.getOrderExecutionService().getAllOrders();
         assertEquals(1, orders.size());
 
         Order firstOrder = orders.get(0);
@@ -99,16 +106,17 @@ public class ShoppingServiceTest {
     @Test
     public void productOfferedAmountDepletedByOrderedAmount() {
         // given: there is a shop with 10 TVs offered
-        Shop shop = Shop.getShopInstance();
-        shop.resetToEmpty();
+        Shop shop = SimpleShop.getShopInstance();
+        OfferManagementService offerMgmt = shop.getOfferManagementService();
+        offerMgmt.resetToEmpty();
         ProductCategory smartTvCategory = new ProductCategory("Smart TV");
         Product smartTvOne = new Product("Samsung ER345L", smartTvCategory, BigDecimal.valueOf(2000));
 
-        shop.addCategory(smartTvCategory);
-        shop.addProduct(smartTvOne, 10);
+        offerMgmt.addCategory(smartTvCategory);
+        offerMgmt.addProduct(smartTvOne, 10);
 
         // when some customer makes order for 2 TVs
-        CustomerShoppingSession shoppingSession = shop.createCustomerSession();
+        CustomerShoppingSession shoppingSession = shop.getShoppingService().createCustomerSession();
         shoppingSession.addToCart(smartTvOne, 2);
         shoppingSession.makePayment();
         shoppingSession.addCustomerInfo(new Customer("tomek"));
@@ -122,16 +130,18 @@ public class ShoppingServiceTest {
     @Test
     public void notPossibleToOrderWhenInventoryTooLow() {
         // given: there is a shop with 1 TVs offered
-        Shop shop = Shop.getShopInstance();
-        shop.resetToEmpty();
+        Shop shop = SimpleShop.getShopInstance();
+        OfferManagementService offerMgmt = shop.getOfferManagementService();
+
+        offerMgmt.resetToEmpty();
         ProductCategory smartTvCategory = new ProductCategory("Smart TV");
         Product smartTvOne = new Product("Samsung ER345L", smartTvCategory, BigDecimal.valueOf(2000));
 
-        shop.addCategory(smartTvCategory);
-        shop.addProduct(smartTvOne, 1);
+        offerMgmt.addCategory(smartTvCategory);
+        offerMgmt.addProduct(smartTvOne, 1);
 
         // when some customer makes order for 2 TVs
-        CustomerShoppingSession shoppingSession = shop.createCustomerSession();
+        CustomerShoppingSession shoppingSession = shop.getShoppingService().createCustomerSession();
         shoppingSession.addToCart(smartTvOne, 2);
         shoppingSession.makePayment();
         shoppingSession.addCustomerInfo(new Customer("tomek"));

@@ -36,7 +36,7 @@ public class Order {
         dateOrderCreated = new Date();
     }
 
-    Order(ShoppingCart cart, Customer customer) {
+    public Order(ShoppingCart cart, Customer customer) {
         // TODO rework this associacian to unilateral
         Set<OrderItem> orderItems = cart.getProducts();
         orderItems.forEach(item->item.setOwningOrder(this));

@@ -1,4 +1,9 @@
-package model;
+package serviceapi;
+
+import model.Order;
+import model.Product;
+import model.ProductCategory;
+import model.ProductFeatures;
 
 import java.util.Iterator;
 import java.util.List;
