@@ -1,0 +1,8 @@
+body {
+    font-family: Helvetica, Arial;
+}
+
+div.message {
+    margin-top:7px;
+    margin-bottom:7px;
+}

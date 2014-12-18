@@ -1,0 +1,12 @@
+div.header p#loggedAs {
+     font-size: small;
+     float:right;
+}
+
+div.header p#loggedAs span#loggedUser {
+    margin-right:4px;
+}
+
+div.header #ShopLogo {
+    float:left;
+}

@@ -23,6 +23,17 @@
         <url-pattern>/OfferManagement/*</url-pattern>
     </filter-mapping>
 
+
+    <servlet>
+        <servlet-name>OfferManagementMainScreen</servlet-name>
+        <servlet-class>web.OfferManagementMainScreenServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OfferManagementMainScreen</servlet-name>
+        <url-pattern>/OfferManagement/</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>ProductCategoryManagement</servlet-name>
         <servlet-class>web.ProductCategoryManagementServlet</servlet-class>

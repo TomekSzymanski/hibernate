@@ -18,14 +18,14 @@ public class HTMLResponseView implements ResponseView {
     @Override
     public void addHeaderAndMenu() {
         out.append("<div class=\"header\">\n");
-        out.append("<h2>My Best Shop</h2>\n");
+        out.append("<h2 id=\"ShopLogo\">My Best Shop</h2>\n");
 
         if (loggedUser!=null) {
-            out.append("Logged as: <span class=\"loggedUser\">" + loggedUser + "</span><a href=\"Logout\">Logout</a>\n");
+            out.append("<p id=\"loggedAs\">Logged as: <span id=\"loggedUser\">" + loggedUser + "</span><a id=\"logoutLink\" href=\"Logout\">Logout</a></p>\n");
         }
 
         out.append("</div>\n");
-
+        out.append("<div class=\"clear\"></div>\n");
         out.append("<div class=\"menu\">\n");
         out.append("<ul>\n");
         out.append("<li><a href=\"#\">Categories</a>\n");
@@ -49,7 +49,7 @@ public class HTMLResponseView implements ResponseView {
 
     @Override
     public void addMessage(String message) {
-        out.append("<div>" + message + "</div>\n");
+        out.append("<div class=\"message\">" + message + "</div>\n");
     }
 
     @Override
@@ -88,6 +88,8 @@ public class HTMLResponseView implements ResponseView {
         builder.append("<title></title>\n");
         builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"menu.css\" media=\"screen\" />\n");
         builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"form.css\" media=\"screen\" />\n");
+        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"header.css\" media=\"screen\" />\n");
+        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"main.css\" media=\"screen\" />\n");
         builder.append("</head>\n");
         builder.append("<body>\n");
         return builder.toString();

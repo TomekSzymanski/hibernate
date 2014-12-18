@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (authorizationService.validate(user, password)) {
-            RequestDispatcher dispatcher = req.getRequestDispatcher("/OfferManagement/AddNewProductCategory");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/OfferManagement/");
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
             dispatcher.forward(req, resp);
