@@ -1,0 +1,63 @@
+.menu ul, menu ul li {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.menu ul li{
+    float:left;
+    background-color:#7f95db;
+    border-right:solid 1px white;
+    height:25px;
+    line-height:25px;
+}
+/* We apply the background hover color when user hover the mouse over of the li component */
+.menu ul li:hover{
+    background-color:#6679e9;
+    position:relative;
+}
+
+/* We apply the link style */
+.menu ul li a{
+    padding:0px 15px;
+    color:#ffffff;
+    display:inline-block;
+    text-decoration:none;
+}
+
+/**** SECOND LEVEL MENU ****/
+.menu ul li ul{
+    position:absolute;
+    display:none;
+}
+
+/* When user has hovered the li item, we show the ul list by applying display:block, note: 25px is the menu height.  */
+.menu ul li:hover ul{
+    left:0;
+    top:25px;
+    display:block;
+}
+
+/* As the parent li has float:left property, we overwrite for the submenu (level 2) to float none (normal position)  */
+.menu ul li ul li{
+    float:none;
+    width:150px;
+    background-color:#cae25a;
+}
+
+/* We change the background color for the level 2 submenu when hovering the menu */
+.menu ul li:hover ul li:hover{
+    background-color:#b1b536;
+}
+
+/* We style the color of level 2 links */
+.menu ul li ul li a{
+    color:#454444;
+    display:inline-block;
+    width:120px;
+}
+
+/* Clear float */
+.clear {
+    clear:both;
+}

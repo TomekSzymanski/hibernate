@@ -4,6 +4,7 @@ import model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.stereotype.Service;
 import serviceapi.ApplicationException;
 import serviceapi.InventoryTooLowException;
 import serviceapi.ShoppingService;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
 * Created on 2014-11-30.
 */
+@Service
 class ShoppingServiceImpl implements ShoppingService {
 
     @Override

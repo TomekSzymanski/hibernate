@@ -72,7 +72,7 @@ public class ProductCategory {
         return aliases;
     }
 
-    void setAliases(Set<String> aliases) {
+    public void setAliases(Set<String> aliases) {
         this.aliases = aliases;
     }
 }

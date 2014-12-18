@@ -1,9 +1,6 @@
 package serviceimpl;
 
-import serviceapi.OfferManagementService;
-import serviceapi.OrderExecutionService;
-import serviceapi.Shop;
-import serviceapi.ShoppingService;
+import serviceapi.*;
 
 /**
  * Created on 2014-11-26.
@@ -30,5 +27,10 @@ public class SimpleShop implements Shop {
     @Override
     public OrderExecutionService getOrderExecutionService() {
         return new OrderProcessor();
+    }
+
+    @Override
+    public AuthorizationService getAuthorizationService() {
+        return new DBBasedAuthorizationService(); // TODO use Spring bean
     }
 }

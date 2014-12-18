@@ -1,4 +1,11 @@
-﻿user stories:
+﻿===== login servlet and session =======
+- CSS style logged as to the right
+- why after login, below the menu, we have category add form displayed?
+- why login form inherits other forms style (the form displayed again, after unsuccessful login)
+- display all cathegories, but it requires pagination
+- move to Spring MVC
+
+user stories:
 1. As customer I want to browse products for given product cathegory (aka cathegory)
 
 1b. as a user I want to be presented all product cathegories
@@ -69,8 +76,7 @@ na poszczegolnych encjach i na ich atrybutach. -> na wszystkich?
 - https://chlebik.wordpress.com/2013/10/16/entity-manager-i-okolice-czesc-1/
 po co jest w TuDu ten EntityManager? czemu ja go nie uzywam?
 
-
-
+=============== spring DI =================
 
 
 ================ WEB ====================

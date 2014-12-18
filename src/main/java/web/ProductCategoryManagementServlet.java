@@ -1,6 +1,7 @@
 package web;
 
 import model.ProductCategory;
+import serviceapi.ApplicationException;
 import serviceapi.OfferManagementService;
 import serviceimpl.SimpleShop;
 
@@ -10,54 +11,79 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+// @Service
 public class ProductCategoryManagementServlet extends HttpServlet {
 
-    public static final String ADD_NEW_PRODUCT_CATEGORY = "addNewProductCategory";
-    public static final String PRODUCT_CATEGORY_NAME_PARAM = "productCategoryName";
+    // TODO make thread safe
 
-    private final OfferManagementService offerManagementService = SimpleShop.getShopInstance().getOfferManagementService();
+    //@Autowired
+    //@Qualifier("dbOrderManagement")
+    private OfferManagementService offerMgmtService;
+
+    private static final String CATEGORY_ALIASES_SEPARATOR = ",";
+
+    public ProductCategoryManagementServlet() {
+        offerMgmtService = SimpleShop.getShopInstance().getOfferManagementService();
+    }
 
 
+    // TODO for UT only
+    public ProductCategoryManagementServlet(OfferManagementService offerMgmtService) {
+        this.offerMgmtService = offerMgmtService;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String actionParameter = req.getParameter("action");
-
-        if (ADD_NEW_PRODUCT_CATEGORY.equals(actionParameter)) {
-            handleProductCategoryAdd(req, resp);
-            return;
-        }
-
-        resp.setContentType("text/html");
-        PrintWriter writer = resp.getWriter();
-        writer.println("<HTML><h2>Product Category management</h2></HTML>");
-        writer.println("Actions:");
-        writer.println("<ul>");
-        writer.println("<li><a href=\"ProductCategoryManagement?action=" + ADD_NEW_PRODUCT_CATEGORY + "\">Add new product category</a></li>");
-        writer.println("</ul>");
+        doPost(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String productCathegoryName = req.getParameter(PRODUCT_CATEGORY_NAME_PARAM);
-        resp.getWriter().println("you provided " + productCathegoryName);
+        String  categoryName = req.getParameter("categoryName");
+
+        if (categoryName==null) {
+            printAddNewProductCategoryForm(req, resp);
+            return;
+        }
+
+        ProductCategory newCategory = new ProductCategory(categoryName);
+
+        String categoryAliases = req.getParameter("categoryAliases");
+        if ((categoryAliases!=null) && (!categoryAliases.equals(""))) {
+            String [] categoryAliasesStrings = categoryAliases.split(CATEGORY_ALIASES_SEPARATOR);
+            Set<String> categoryAliasesSet = Arrays.stream(categoryAliasesStrings).map(String::trim).collect(Collectors.toSet());
+            newCategory.setAliases(categoryAliasesSet);
+        }
+
+        ResponseView responseView = ResponseViewFactory.getResponseView(req.getSession(false));
+
+        responseView.addHeaderAndMenu();
+
+        try {
+            offerMgmtService.addCategory(newCategory);
+            responseView.addMessage("New category " + responseView.quote(categoryName) + " added");
+        } catch (ApplicationException e) {
+            responseView.addMessage("Unable to add new category " + responseView.quote(categoryName) + ". " + e.getMessage());
+        } finally {
+            responseView.addFooter();
+        }
+
+        resp.setContentType(responseView.getContentType());
+        PrintWriter writer = resp.getWriter();
+        responseView.print(writer);
+        writer.close();
     }
 
-    private void handleProductCategoryAdd(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String productCathegoryName = req.getParameter(PRODUCT_CATEGORY_NAME_PARAM);
-        if (productCathegoryName!=null) {
-            offerManagementService.addCategory(new ProductCategory(productCathegoryName));
-            resp.getWriter().println("New product category <i>" + productCathegoryName + "</i> added.");
-        } else { // display/redisplay the input form
-            resp.getWriter().println("<html> <body>" +
-                    "<form action=\"ProductCategoryManagement?action=" + ADD_NEW_PRODUCT_CATEGORY + "\" method=\"POST\">" +
-                    "<br />" +
-                    "Product name: <input type=\"text\" name=\"" + PRODUCT_CATEGORY_NAME_PARAM + "\" />" +
-                    "<input type=\"submit\" value=\"Add Category\" />" +
-                    "</form>" +
-                    "</body></html>");
-        }
+    private void printAddNewProductCategoryForm(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ResponseView view = ResponseViewFactory.getResponseView(req.getSession(false));
+        view.addHeaderAndMenu();
+        view.addElement(new AddNewProductCategoryForm());
+        PrintWriter writer = resp.getWriter();
+        view.print(writer);
+        writer.close();
     }
 }

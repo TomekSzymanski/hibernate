@@ -10,4 +10,5 @@ public interface Shop {
 
     OrderExecutionService getOrderExecutionService();
 
+    AuthorizationService getAuthorizationService();
 }

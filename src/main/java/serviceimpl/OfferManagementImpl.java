@@ -3,17 +3,17 @@ package serviceimpl;
 import model.Product;
 import model.ProductCategory;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.stereotype.Service;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.stereotype.Repository;
 import serviceapi.ApplicationException;
 import serviceapi.OfferManagementService;
 
 /**
  * Created on 2014-12-11.
  */
-@Service
+@Repository("dbOrderManagement") // bo Repository robili wrappowanie wyjatkow low level na jeden DataAccessException.
 public class OfferManagementImpl implements OfferManagementService {
 
     @Override
@@ -23,20 +23,15 @@ public class OfferManagementImpl implements OfferManagementService {
 
         try {
             trx = session.beginTransaction();
-            // check first if such category does not exist
-            // TODO: should we do it this way or rely in unique constraint and then handle it in exception:
-            // Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry 'Smart TV' for key 'name'
-            Query query = session.createQuery("SELECT 1 FROM ProductCategory WHERE id=:id");
-            query.setParameter("id", productCategory.getId());
-            if (query.uniqueResult() != null) {
-                trx.rollback();
-                throw new ApplicationException("Category " + productCategory.getName() + " already exists.");
-            }
             session.save(productCategory);
             trx.commit();
-        } catch (HibernateException e) { // TODO check if there is concreate child of Hibernate exception
+
+        } catch (ConstraintViolationException e) {
             if (trx!=null) trx.rollback();
-            throw new ApplicationException("unable to add new product", e);
+            throw new ApplicationException("Category with name '" + productCategory.getName() + "' already exists", e);
+        } catch (HibernateException e) {
+            if (trx!=null) trx.rollback();
+            throw new ApplicationException("Unable to add new product category", e);
         } finally {
             session.close();
         }

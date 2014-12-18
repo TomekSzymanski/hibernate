@@ -7,6 +7,11 @@ import model.ProductCategory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import serviceapi.*;
 import serviceimpl.SimpleShop;
 
@@ -19,7 +24,16 @@ import java.util.logging.Logger;
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertFalse;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/SpringBeans.xml"}) // TT: IDE wie ze to jest maven, z kolei dla mavena test/resources to jest root dla resources --
 public class ShoppingServiceTest {
+
+    @Autowired
+    @Qualifier("dbOrderManagement") // dowolna klasa moze miec taka annotacje dbOrderManagement (to jest API)
+    private OfferManagementService offerMgmt;
+
+    @Autowired
+    private ShoppingService shoppingService;
 
     @BeforeClass
     public static void setUp() {
@@ -29,8 +43,6 @@ public class ShoppingServiceTest {
     @Test
     public void getAllProductsByCategory() {
         // given
-        Shop shop = SimpleShop.getShopInstance();
-        OfferManagementService offerMgmt = shop.getOfferManagementService();
         offerMgmt.resetToEmpty(); // TODO: do not export this method, move it to test, make it as a script. use in memory database, initialize it with your scripts (DDLs)
         ProductCategory smartTvCategory = new ProductCategory("Smart TV");
         Product smartTvOne = new Product("Samsung ER345L", smartTvCategory, BigDecimal.valueOf(2000));
@@ -41,7 +53,6 @@ public class ShoppingServiceTest {
         offerMgmt.addProduct(smartTvTwo, 1);
 
         // when
-        ShoppingService shoppingService = shop.getShoppingService();
         Iterator<Product> selectedProducts = shoppingService.getProducts(smartTvCategory).iterator();
 
         assertTrue(selectedProducts.hasNext());

@@ -20,13 +20,16 @@ class HibernateUtil {
     private static final SessionFactory sessionFactory;
 
     static {
+        //Logger.getLogger("org.hibernate").setLevel(Level.ALL);
         try {
-            Configuration configuration = new Configuration().configure()
+            Configuration configuration = new Configuration()
                     .addAnnotatedClass(Customer.class) // TODO: how not to specify all
                     .addAnnotatedClass(ProductCategory.class)
                     .addAnnotatedClass(Product.class)
                     .addAnnotatedClass(Order.class)
-                    .addAnnotatedClass(OrderItem.class);
+                    .addAnnotatedClass(OrderItem.class)
+                    .addAnnotatedClass(LoggedUser.class)
+                    .configure();
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
@@ -66,6 +69,10 @@ class HibernateUtil {
         } finally {
             session.close();
         }
+    }
+
+    static void close() {
+        sessionFactory.close();
     }
 
 }

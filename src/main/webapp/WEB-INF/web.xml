@@ -1,4 +1,4 @@
-<web-app id="MyInternetShop" version="0.2"
+<web-app id="MyInternetShop" version="0.3"
          xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
@@ -6,17 +6,52 @@
 
     <display-name>My Itnernet Shop</display-name>
 
+    <welcome-file-list>
+        <welcome-file>OfferManagement.html</welcome-file>
+    </welcome-file-list>
+
+    <listener>
+        <listener-class>serviceimpl.HibernateListener</listener-class>
+    </listener>
+    
+    <filter>
+        <filter-name>ForceLoginForOfferManagement</filter-name>
+        <filter-class>web.ForceLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ForceLoginForOfferManagement</filter-name>
+        <url-pattern>/OfferManagement/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>ProductCategoryManagement</servlet-name>
-        <servlet-class>
-            web.ProductCategoryManagementServlet
-        </servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <servlet-class>web.ProductCategoryManagementServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ProductCategoryManagement</servlet-name>
-        <url-pattern>/ProductCategoryManagement</url-pattern>
+        <url-pattern>/OfferManagement/AddNewProductCategory</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>web.LoginServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/OfferManagement/Login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>web.LogoutServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/OfferManagement/Logout</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

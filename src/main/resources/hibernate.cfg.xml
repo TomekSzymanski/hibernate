@@ -4,11 +4,10 @@
 
 <hibernate-configuration>
     <session-factory>
-        <!--property name="hibernate.dialect">
+        <property name="hibernate.dialect">
             org.hibernate.dialect.MySQLDialect
-        </property
-        you do not need to set it explicitely: Hibernate will try to read it from JDBC driver metadata. Even if it is not read, it is for optimisation only, cannonical SQL version should also work.
-        -->
+            <!--org.hibernate.dialect.MySQL5InnoDBDialect-->
+        </property>
         <property name="hibernate.connection.driver_class">
             com.mysql.jdbc.Driver
         </property>
@@ -22,13 +21,19 @@
             tomek
         </property>
 
-        <property name="show_sql">false</property>
+        <!-- Print SQL to stdout. -->
+        <!--property name="show_sql">true</property>
+        <property name="format_sql">true</property-->
 
-        <property name="hibernate.c3p0.min_size">5</property>
+        <!-- disabled for UT speed and for web application load time -->
+        <!--property name="hibernate.c3p0.min_size">5</property>
         <property name="hibernate.c3p0.max_size">40</property>
         <property name="hibernate.c3p0.timeout">300</property>
         <property name="hibernate.c3p0.max_statements">50</property>
-        <property name="hibernate.c3p0.idle_test_period">3000</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property-->
+
+        <!-- to eliminate the error when starting: Disabling contextual LOB creation as createClob() method threw error, and to disable actual checking if connection supports it. not needed. Also too make start time normal - we do not neeed hibernate to fetch metadata -->
+        <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
 
     </session-factory>
 </hibernate-configuration>

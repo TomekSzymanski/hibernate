@@ -10,6 +10,8 @@ drop table if exists ProductCategoryAliases;
 
 drop table if exists ProductCategory;
 
+drop table if exists LoggedUser;
+
 create table ProductCategory (
     id int not null auto_increment,
     name varchar(100) unique,
@@ -62,4 +64,11 @@ create table OrderItem (
     primary key(id),-- WAS primary key(orderId, productId),
     foreign key(orderId) references Orders(id),
     foreign key(productId) references Product(id)
+);
+
+create table LoggedUser (
+    id int not null auto_increment,
+    login varchar(20) unique not null,
+    password char(128) not null,
+    primary key(id)
 );
