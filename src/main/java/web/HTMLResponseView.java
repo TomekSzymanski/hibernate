@@ -8,7 +8,7 @@ import java.io.PrintWriter;
  */
 public class HTMLResponseView implements ResponseView {
 
-    private StringBuilder out = new StringBuilder();
+    private final StringBuilder out = new StringBuilder();
     private String loggedUser;
 
     HTMLResponseView(String loggedUser) {
@@ -30,8 +30,8 @@ public class HTMLResponseView implements ResponseView {
         out.append("<ul>\n");
         out.append("<li><a href=\"#\">Categories</a>\n");
         out.append("<ul>\n");
-        out.append("<li><a href=\"#\">Find</a></li>\n");
-        out.append("<li><a href=\"#\">Browse All</a></li>\n");
+        out.append("<li><a href=\"FindCategory\">Find</a></li>\n");
+        out.append("<li><a href=\"FindCategory?returnAll=true\">Browse All</a></li>\n");
         out.append("<li><a href=\"AddNewProductCategory\">Add New</a></li>\n");
         out.append("</ul>\n");
         out.append("</li>\n");

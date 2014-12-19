@@ -4,9 +4,11 @@ package web;
  * Created on 2014-12-18.
  */
 public class AddNewProductCategoryForm implements Printable {
-    private static StringBuilder out = new StringBuilder();
 
-    private static void initialize() {
+    private static final String formHtml = getFormHtml();
+
+    private static String getFormHtml() {
+        StringBuilder out = new StringBuilder();
         out.append("<div>");
         out.append("<form action=\"AddNewProductCategory\" method=\"POST\">");
         out.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"form.css\" media=\"screen\" />");
@@ -24,14 +26,11 @@ public class AddNewProductCategoryForm implements Printable {
         out.append("</fieldset>");
         out.append("</form>");
         out.append("</div>");
-    }
-
-    static {
-        initialize();
+        return out.toString();
     }
 
     @Override
     public String toString() {
-        return out.toString();
+        return formHtml;
     }
 }
