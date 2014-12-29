@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "ProductCategory")
@@ -19,10 +20,9 @@ public class ProductCategory {
 //    private ProductFeatures filterableFeatures;
 
     /** all other names that this category may be referred or known as, or searched for */
-    @ElementCollection
-    @CollectionTable(name = "ProductCategoryAliases", joinColumns = @JoinColumn(name = "productCategoryId"))
-    @Column(name = "value")
-    private Set<String> aliases = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="productCategoryId")
+    private Set<ProductCategoryAlias> aliases = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -42,7 +42,6 @@ public class ProductCategory {
     public int hashCode() {
         int result = id;
         result = 31 * result + name.hashCode();
-        result = 31 * result + (aliases != null ? aliases.hashCode() : 0);
         return result;
     }
 
@@ -68,11 +67,13 @@ public class ProductCategory {
         this.name = name;
     }
 
-    public Set<String> getAliases() {
-        return aliases;
+    public Set<String> getAliasesStrings() {
+        return aliases.stream().map(ProductCategoryAlias::getValue).collect(Collectors.toSet());
     }
 
-    public void setAliases(Set<String> aliases) {
-        this.aliases = aliases;
+    public void setAliases(Set<String> aliasesValues) {
+        for (String alias: aliasesValues) {
+            aliases.add(new ProductCategoryAlias(this, alias));
+        }
     }
 }

@@ -58,7 +58,7 @@ public class FindCategoryServlet extends HttpServlet {
         for (ProductCategory category : matchingCategories) {
             List<String> oneCategoryValues = new ArrayList<>();
             oneCategoryValues.add(category.getName());
-            oneCategoryValues.add(setToCommaSeparatedList(category.getAliases()));
+            oneCategoryValues.add(setToCommaSeparatedList(category.getAliasesStrings()));
             tableCells.add(oneCategoryValues);
         }
 

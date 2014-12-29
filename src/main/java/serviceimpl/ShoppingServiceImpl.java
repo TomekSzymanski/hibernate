@@ -1,7 +1,6 @@
 package serviceimpl;
 
 import model.*;
-import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -21,8 +20,9 @@ class ShoppingServiceImpl implements ShoppingService {
 
     @Override
     public List<ProductCategory> getCategories() {
+        List queryResults;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List queryResults = session.createCriteria(ProductCategory.class).setFetchMode("aliases", FetchMode.EAGER).list();
+        queryResults = session.createQuery("FROM ProductCategory").list();
         session.close();
         return queryResults;
     }

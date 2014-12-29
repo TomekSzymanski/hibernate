@@ -60,6 +60,7 @@ public class OfferManagementImpl implements OfferManagementService {
     @Override
     public void clearAllInventory() {
         HibernateUtil.deleteAll("Product");
+        HibernateUtil.deleteAll("ProductCategoryAlias");
         HibernateUtil.deleteAll("ProductCategory");
     }
 

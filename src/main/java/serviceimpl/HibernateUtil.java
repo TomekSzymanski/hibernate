@@ -25,6 +25,7 @@ class HibernateUtil {
             Configuration configuration = new Configuration()
                     .addAnnotatedClass(Customer.class) // TODO: how not to specify all
                     .addAnnotatedClass(ProductCategory.class)
+                    .addAnnotatedClass(ProductCategoryAlias.class)
                     .addAnnotatedClass(Product.class)
                     .addAnnotatedClass(Order.class)
                     .addAnnotatedClass(OrderItem.class)

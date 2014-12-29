@@ -86,7 +86,7 @@ public class HTMLResponseView implements ResponseView {
         builder.append("<head lang=\"en\">\n");
         builder.append("<meta charset=\"UTF-8\">\n");
         builder.append("<title></title>\n");
-        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"allStyles.scss\" media=\"screen\" />\n");
+        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"allStyles.css\" media=\"screen\" />\n");
         builder.append("</head>\n");
         builder.append("<body>\n");
         return builder.toString();
@@ -96,12 +96,4 @@ public class HTMLResponseView implements ResponseView {
         return "</body>\n</html>\n";
     }
 
-//    public static void main(String[] args) throws IOException {
-//        HTMLResponseView v = new HTMLResponseView();
-//        v.addHeaderAndMenu();
-//        v.addMessage("toemk Sz");
-//        PrintWriter pw = new PrintWriter(System.out);
-//        v.print(pw);
-//        pw.close();
-//    }
 }

@@ -72,3 +72,8 @@ create table LoggedUser (
     password char(128) not null,
     primary key(id)
 );
+
+/* add initial, internal user */
+INSERT INTO loggeduser (login, password) VALUES ('tomek', 'c77d74e935d0ba9b9479546ea819460cd53f9a3b3be34d73dffa840a20a92691471d84ab338701caa5a7849a4ba340a40de0c3ca67a61137bc001b11a14ea8a4');
+
+COMMIT;

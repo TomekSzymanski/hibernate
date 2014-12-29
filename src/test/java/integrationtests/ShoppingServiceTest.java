@@ -1,9 +1,6 @@
 package integrationtests;
 
-import model.Customer;
-import model.Order;
-import model.Product;
-import model.ProductCategory;
+import model.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,8 +13,10 @@ import serviceapi.*;
 import serviceimpl.SimpleShop;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +37,31 @@ public class ShoppingServiceTest {
     @BeforeClass
     public static void setUp() {
         Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+    }
+
+    @Test
+    public void addNewCategoryWithAlias() {
+        // setUp
+        offerMgmt.resetToEmpty();
+
+        // given
+        ProductCategory smartTvCategory = new ProductCategory("Smart TV");
+        Set<String> aliasesSet = new HashSet<>();
+        aliasesSet.add("Plasma");
+        aliasesSet.add("TV");
+        smartTvCategory.setAliases(aliasesSet);
+
+        // when
+        offerMgmt.addCategory(smartTvCategory);
+
+        //then
+        List<ProductCategory> productCategories = shoppingService.getCategories();
+
+        assertEquals(1, productCategories.size());
+        assertEquals(smartTvCategory, productCategories.get(0));
+        assertTrue(productCategories.get(0).getAliasesStrings().contains("Plasma"));
+        assertTrue(productCategories.get(0).getAliasesStrings().contains("TV"));
+
     }
 
     @Test
