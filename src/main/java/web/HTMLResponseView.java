@@ -21,13 +21,13 @@ public class HTMLResponseView implements ResponseView {
         out.append("<h2 id=\"ShopLogo\">My Best Shop</h2>\n");
 
         if (loggedUser!=null) {
-            out.append("<p id=\"loggedAs\">Logged as: <span id=\"loggedUser\">" + loggedUser + "</span><a id=\"logoutLink\" href=\"Logout\">Logout</a></p>\n");
+            out.append("<p class=\"loggedAs\">Logged as: <span class=\"loggedUser\">" + loggedUser + "</span><a class=\"logoutLink\" href=\"Logout\">Logout</a></p>\n");
         }
 
         out.append("</div>\n");
         out.append("<div class=\"clear\"></div>\n");
         out.append("<div class=\"menu\">\n");
-        out.append("<ul>\n");
+        out.append("<ul class=\"toplevel\">\n");
         out.append("<li><a href=\"#\">Categories</a>\n");
         out.append("<ul>\n");
         out.append("<li><a href=\"FindCategory\">Find</a></li>\n");
@@ -86,10 +86,7 @@ public class HTMLResponseView implements ResponseView {
         builder.append("<head lang=\"en\">\n");
         builder.append("<meta charset=\"UTF-8\">\n");
         builder.append("<title></title>\n");
-        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"menu.css\" media=\"screen\" />\n");
-        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"form.css\" media=\"screen\" />\n");
-        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"header.css\" media=\"screen\" />\n");
-        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"main.css\" media=\"screen\" />\n");
+        builder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"allStyles.scss\" media=\"screen\" />\n");
         builder.append("</head>\n");
         builder.append("<body>\n");
         return builder.toString();

@@ -22,7 +22,7 @@ public class ForceLoginFilter implements Filter {
 
         String servletPath = ((HttpServletRequest) servletRequest).getServletPath();
         if (((session != null) && (session.getAttribute("user") != null)) // user logged in, continue
-            || ( servletPath.endsWith("LoginPage.html") || servletPath.endsWith("Login") || servletPath.endsWith("login.css") ) ) { //we are redirecting to login page itself
+            || ( servletPath.endsWith("LoginPage.html") || servletPath.endsWith("Login") || servletPath.endsWith("allStyles.css") ) ) { //we are redirecting to login page itself // TODO: security hole servletPath.endsWith("LoginPage.html") || servletPath.endsWith("Login") : do exact match
             filterChain.doFilter(servletRequest, servletResponse);
         } else { // redirect to the login page
             ((HttpServletResponse)servletResponse).sendRedirect("LoginPage.html");

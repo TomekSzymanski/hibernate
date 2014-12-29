@@ -1,0 +1,85 @@
+$menu-radius: 4px;
+
+$soft-blue: #6679e9;
+$very-soft-blue: #7f95db;
+
+$soft-yellow: #cae25a;
+$moderate-yellow: #b1b536;
+
+$very-dark-grayish-red: #454444;
+
+.menu {
+    // reset styles
+    ul, ul li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    ul li {
+        float: left;
+        background-color: $very-soft-blue;
+        border-right: solid 1px white;
+        height: 25px;
+        line-height: 25px;
+
+        &:hover {
+            background-color: $soft-blue;
+            position: relative;
+        }
+    }
+
+    ul.toplevel > li:first-child {
+        border-top-left-radius: $menu-radius;
+    }
+
+    ul.toplevel > li:last-child {
+        border-top-right-radius: $menu-radius;
+    }
+
+    /* We apply the link style */
+    ul li a {
+        padding: 0px 15px;
+        color: white;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    /**** SECOND LEVEL MENU ****/
+    ul li ul {
+        position: absolute;
+        display: none;
+    }
+
+    /* When user has hovered the li item, we show the ul list by applying display:block, note: 25px is the menu height.  */
+    ul li:hover ul {
+        left: 0;
+        top: 25px;
+        display: block;
+    }
+
+    /* As the parent li has float:left property, we overwrite for the submenu (level 2) to float none (normal position)  */
+    ul li ul li {
+        float: none;
+        width: 150px;
+        background-color: $soft-yellow;
+
+        &:last-child {
+            border-bottom-right-radius: $menu-radius;
+            border-bottom-left-radius: $menu-radius;
+        }
+    }
+
+    /* We change the background color for the level 2 submenu when hovering the menu */
+    ul li:hover ul li:hover {
+        background-color: $moderate-yellow;
+    }
+
+    /* We style the color of level 2 links */
+    ul li ul li a {
+        color: $very-dark-grayish-red;
+        display: inline-block;
+        width: 120px;
+    }
+
+}

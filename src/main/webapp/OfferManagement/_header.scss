@@ -1,0 +1,19 @@
+.header {
+    display: inline-block;
+    width: 100%;
+
+    #ShopLogo {
+        float: left;
+        margin: 0px;
+    }
+
+    .loggedAs {
+        float: right;
+        font-size: small;
+        margin: 0px;
+    }
+
+    .loggedUser {
+        margin-right: 4px;
+    }
+}

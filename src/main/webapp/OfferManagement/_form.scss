@@ -1,0 +1,33 @@
+/** styling for input forms**/
+.addInventoryForm {
+    $very-light-yellow: #fbff83;
+
+    margin: 20px auto;
+    max-width: 350px;
+    background-color: $very-light-yellow;
+
+    form {
+
+        fieldset {
+            border: 1px solid grey;
+            margin: 0;
+            padding: 0;
+        }
+
+        label {
+            display: block;
+            padding: 10px 10px 10px 10px
+        }
+
+        input, textarea {
+            width: 95%;
+        }
+
+        input[type="submit"] {
+            margin-left: 10px;
+            margin-bottom: 10px;
+            width: 50%;
+        }
+    }
+
+}
